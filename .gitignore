@@ -1,1 +1,9 @@
 resources
+
+# Docker local data and state files
+.docker/
+*docker-compose.override.yml
+
+# If you ever save Docker images as local backup files
+*.tar
+*.tar.gz
