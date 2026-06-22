@@ -41,14 +41,13 @@ const userSchema = new mongoose.Schema(
 );
 
 // 2. Pre-Save Password Hashing Middleware
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async function () {
   if (!this.isModified("passwordHash")) {
     return next();
   }
 
   const hashed = await bcrypt.hash(this.passwordHash, SALT_ROUNDS);
   this.passwordHash = hashed;
-  next();
 });
 
 // 3. Password Verification Instance Method

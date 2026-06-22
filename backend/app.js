@@ -1,11 +1,10 @@
 const express = require("express");
 const cors = require("cors");
 
-const authRoutes = require("./routes/authRoutes");
-const itemRoutes = require("./routes/itemsRoutes");
-
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./middleware/errorHandler");
+
+const apiRoutes = require("./routes");
 
 const app = express();
 
@@ -17,10 +16,9 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-app.use("/api/auth", authRoutes);
-app.use("/api/items", itemRoutes);
+app.use("/api", apiRoutes);
 
-app.all("/{*splat}", (req, res, next) => {
+app.all(/.*/, (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 
