@@ -1,13 +1,12 @@
 const express = require("express");
 const router = express.Router();
+const itemController = require("../controllers/itemController");
+const authenticateToken = require("../middleware/authMiddleware");
 
-// TODO: implement item CRUD controllers
-router.get("/", (req, res) => {
-  res.status(501).json({ message: "List items route not implemented yet" });
-});
-
-router.post("/", (req, res) => {
-  res.status(501).json({ message: "Create item route not implemented yet" });
-});
+router.use(authenticateToken);
+router
+  .route("/")
+  .post(itemController.createItemController)
+  .get(itemController.getItemsController);
 
 module.exports = router;

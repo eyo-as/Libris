@@ -47,7 +47,18 @@ const authenticateUser = async ({ email, password }) => {
   return user;
 };
 
+const getUserById = async (userId) => {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new AppError("Invalid credentials.", 401);
+  }
+
+  return user;
+};
+
 module.exports = {
   createUser,
   authenticateUser,
+  getUserById,
 };
