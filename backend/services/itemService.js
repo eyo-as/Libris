@@ -22,7 +22,12 @@ const getItems = async (userId) => {
   return items;
 };
 
-const updateItem = async (itemId, itemData) => {
+const updateItem = async (itemId, userId, itemData) => {
+  const user = await ReadingItem.find({ userId });
+  if (!user) {
+    throw new AppError("User not found", 401);
+  }
+
   const newItem = await ReadingItem.findByIdAndUpdate(itemId, itemData, {
     returnDocument: "after",
   });
