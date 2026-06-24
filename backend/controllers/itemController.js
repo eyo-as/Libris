@@ -1,10 +1,10 @@
-const { getUserById } = require("../services/authService");
 const {
   getItems,
   createItem,
   updateItem,
   deleteItem,
 } = require("../services/itemService");
+const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 
 const createItemController = catchAsync(async (req, res, next) => {
@@ -22,7 +22,6 @@ const createItemController = catchAsync(async (req, res, next) => {
 
 const getItemsController = catchAsync(async (req, res, next) => {
   const userId = req.user.id || req.user._id;
-
   const items = await getItems(userId);
 
   res.status(200).json({
@@ -38,6 +37,10 @@ const updateItemController = catchAsync(async (req, res, next) => {
 
   const newItem = await updateItem(itemId, userId, req.body);
 
+  if (!newItem) {
+    return next(new AppError("Item not found or unauthorized", 404));
+  }
+
   res.status(200).json({
     status: "success",
     newItem,
@@ -50,9 +53,11 @@ const deleteItemController = catchAsync(async (req, res, next) => {
 
   const item = await deleteItem(itemId, userId);
 
-  res.status(200).json({
-    status: "success",
-  });
+  if (!item) {
+    return next(new AppError("Item not found or unauthorized", 404));
+  }
+
+  res.status(204).send();
 });
 
 module.exports = {

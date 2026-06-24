@@ -23,30 +23,25 @@ const getItems = async (userId) => {
 };
 
 const updateItem = async (itemId, userId, itemData) => {
-  const user = await ReadingItem.find({ userId });
-  if (!user) {
-    throw new AppError("User not found", 401);
-  }
+  const newItem = await ReadingItem.findByIdAndUpdate(
+    { _id: itemId, userId: userId },
+    itemData,
+    {
+      returnDocument: "after",
+      runValidators: true,
+    },
+  );
 
-  const newItem = await ReadingItem.findByIdAndUpdate(itemId, itemData, {
-    returnDocument: "after",
-  });
-
-  return itemData;
+  return newItem;
 };
 
 const deleteItem = async (itemId, userId) => {
-  const user = await ReadingItem.find({ userId });
-  const currentItemId = await ReadingItem.find({ itemId });
+  const deletedItem = await ReadingItem.findOneAndDelete({
+    _id: itemId,
+    userId: userId,
+  });
 
-  if (!user) {
-    throw new AppError("User not found", 401);
-  }
-  if (!(itemId === currentItemId)) {
-    throw new AppError("Item not found", 404);
-  }
-
-  await ReadingItem.findByIdAndDelete(itemId);
+  return deletedItem;
 };
 
 module.exports = { createItem, getItems, updateItem, deleteItem };
