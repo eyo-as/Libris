@@ -22,4 +22,12 @@ const getItems = async (userId) => {
   return items;
 };
 
-module.exports = { createItem, getItems };
+const updateItem = async (itemId, itemData) => {
+  const newItem = await ReadingItem.findByIdAndUpdate(itemId, itemData, {
+    returnDocument: "after",
+  });
+
+  return itemData;
+};
+
+module.exports = { createItem, getItems, updateItem };

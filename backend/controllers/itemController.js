@@ -1,5 +1,5 @@
 const { getUserById } = require("../services/authService");
-const { getItems, createItem } = require("../services/itemService");
+const { getItems, createItem, updateItem } = require("../services/itemService");
 const catchAsync = require("../utils/catchAsync");
 
 const createItemController = catchAsync(async (req, res, next) => {
@@ -27,4 +27,19 @@ const getItemsController = catchAsync(async (req, res, next) => {
   });
 });
 
-module.exports = { createItemController, getItemsController };
+const updateItemController = catchAsync(async (req, res, next) => {
+  const itemId = req.params.id;
+
+  const newItem = await updateItem(itemId, req.body);
+
+  res.status(200).json({
+    status: "success",
+    newItem,
+  });
+});
+
+module.exports = {
+  createItemController,
+  getItemsController,
+  updateItemController,
+};

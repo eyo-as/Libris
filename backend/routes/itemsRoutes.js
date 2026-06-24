@@ -8,5 +8,6 @@ router
   .route("/")
   .post(itemController.createItemController)
   .get(itemController.getItemsController);
+router.route("/:id").put(itemController.updateItemController);
 
 module.exports = router;
