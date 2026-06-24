@@ -35,4 +35,18 @@ const updateItem = async (itemId, userId, itemData) => {
   return itemData;
 };
 
-module.exports = { createItem, getItems, updateItem };
+const deleteItem = async (itemId, userId) => {
+  const user = await ReadingItem.find({ userId });
+  const currentItemId = await ReadingItem.find({ itemId });
+
+  if (!user) {
+    throw new AppError("User not found", 401);
+  }
+  if (!(itemId === currentItemId)) {
+    throw new AppError("Item not found", 404);
+  }
+
+  await ReadingItem.findByIdAndDelete(itemId);
+};
+
+module.exports = { createItem, getItems, updateItem, deleteItem };
