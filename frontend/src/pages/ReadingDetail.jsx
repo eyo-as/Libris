@@ -13,7 +13,6 @@ const ReadingDetail = () => {
     [itemId],
   );
   const { data: item, loading, error, refetch } = useFetch(fetchSingleItem);
-  console.log(item);
 
   useEffect(() => {
     refetch();

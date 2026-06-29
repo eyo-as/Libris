@@ -1,18 +1,51 @@
-import { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { createReadingItem } from "../services/itemsService";
+import { useEffect, useRef, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  createReadingItem,
+  getReadingItemById,
+  updateReadingItem,
+} from "../services/itemsService";
 
 const ReadingForm = () => {
+  const { itemId } = useParams();
+  const isEditMode = !!itemId;
+
   const titleRef = useRef(null);
   const authorRef = useRef(null);
   const statusRef = useRef(null);
   const notesRef = useRef(null);
 
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(isEditMode); // True initially ONLY if editing
   const [isSubmiting, setIsSubmiting] = useState(false);
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (!isEditMode) return;
+
+    const loadExistingItemData = async () => {
+      try {
+        const existingItem = await getReadingItemById(itemId);
+
+        // Safely set the DOM input values directly
+        if (titleRef.current) titleRef.current.value = existingItem.title || "";
+        if (authorRef.current)
+          authorRef.current.value = existingItem.author || "";
+        if (statusRef.current)
+          statusRef.current.value = existingItem.status || "want to read";
+        if (notesRef.current) notesRef.current.value = existingItem.notes || "";
+      } catch (err) {
+        setError(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadExistingItemData();
+  }, [itemId, isEditMode]);
+
+  // Dual Submission Handler Flow
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -26,8 +59,13 @@ const ReadingForm = () => {
     };
 
     try {
-      await createReadingItem(itemData);
-      navigate("/reading");
+      if (isEditMode) {
+        await updateReadingItem(itemId, itemData);
+        navigate(`/reading/${itemId}`);
+      } else {
+        await createReadingItem(itemData);
+        navigate("/reading");
+      }
     } catch (err) {
       setError(err);
     } finally {
@@ -35,11 +73,20 @@ const ReadingForm = () => {
     }
   };
 
+  if (isLoading)
+    return (
+      <div>
+        <p>Loading database values into form entries...</p>
+      </div>
+    );
+
   return (
     <div>
-      <div>
-        <h2>Create reading item</h2>
-      </div>
+      <header>
+        <h2>
+          {isEditMode ? "Modify Book Log Entries" : "Create reading item"}
+        </h2>
+      </header>
       <div>{error && <p>{error}</p>}</div>
       <form onSubmit={handleSubmit}>
         <div>
@@ -64,8 +111,15 @@ const ReadingForm = () => {
         </div>
         <div>
           <button type="submit" disabled={isSubmiting}>
-            {isSubmiting ? "Adding book... " : "Add to Library"}
+            {isSubmiting
+              ? "Saving Adjustment... "
+              : isEditMode
+                ? "Save Changes"
+                : "Add to Library"}
           </button>
+          <Link to={isEditMode ? `/reading/${itemId}` : "/reading"}>
+            Cancel
+          </Link>
         </div>
       </form>
     </div>

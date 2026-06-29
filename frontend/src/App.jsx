@@ -20,6 +20,7 @@ const App = () => {
           <Route path="/reading" element={<ReadingList />} />
           <Route path="/reading/new" element={<ReadingForm />} />
           <Route path="/reading/:itemId" element={<ReadingDetail />} />
+          <Route path="/reading/edit/:itemId" element={<ReadingForm />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/reading" replace />} />
