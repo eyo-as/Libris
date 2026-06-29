@@ -10,6 +10,7 @@ router
   .get(itemController.getItemsController);
 router
   .route("/:id")
+  .get(itemController.getItemByIdController)
   .put(itemController.updateItemController)
   .delete(itemController.deleteItemController);
 

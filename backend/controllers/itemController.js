@@ -1,5 +1,6 @@
 const {
   getItems,
+  getItemById,
   createItem,
   updateItem,
   deleteItem,
@@ -28,6 +29,16 @@ const getItemsController = catchAsync(async (req, res, next) => {
     status: "success",
     results: items.length,
     items,
+  });
+});
+
+const getItemByIdController = catchAsync(async (req, res, next) => {
+  const itemId = req.params.id;
+  const item = await getItemById(itemId);
+
+  res.status(200).json({
+    status: "success",
+    item,
   });
 });
 
@@ -63,6 +74,7 @@ const deleteItemController = catchAsync(async (req, res, next) => {
 module.exports = {
   createItemController,
   getItemsController,
+  getItemByIdController,
   updateItemController,
   deleteItemController,
 };

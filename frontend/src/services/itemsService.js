@@ -12,7 +12,7 @@ export const getReadingItems = async () => {
 
 export const getReadingItemById = async (itemId) => {
   const { data } = await api.get(`/items/${itemId}`);
-  return data.item || data;
+  return data.item;
 };
 
 export const updateReadingItem = async (itemId, updatedData) => {

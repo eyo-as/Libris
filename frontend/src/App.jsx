@@ -4,6 +4,7 @@ import Register from "./pages/Register";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import ReadingList from "./pages/ReadingList";
 import ReadingForm from "./pages/ReadingForm";
+import ReadingDetail from "./pages/ReadingDetail";
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
           {/* protected routes here */}
           <Route path="/reading" element={<ReadingList />} />
           <Route path="/reading/new" element={<ReadingForm />} />
+          <Route path="/reading/:itemId" element={<ReadingDetail />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/reading" replace />} />
