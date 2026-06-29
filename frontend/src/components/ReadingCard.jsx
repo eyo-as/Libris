@@ -11,6 +11,7 @@ export default function ReadingCard({ item, onDelete }) {
       <h3>{item.title}</h3>
       {item.author && <p>Author: {item.author}</p>}
       {item.status && <p>Status: {item.status}</p>}
+      {item.notes && <p>Status: {item.notes}</p>}
 
       <div>
         <button onClick={() => navigate(`/reading/edit/${item._id}`)}>

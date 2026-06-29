@@ -26,7 +26,7 @@ const Register = () => {
 
     try {
       await registerHandler(userData);
-      navigate("/items");
+      navigate("/reading");
     } catch (err) {
       setError(err);
     } finally {
