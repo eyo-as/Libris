@@ -1,17 +1,49 @@
 import { useNavigate } from "react-router-dom";
 import { useFetch } from "../hooks/useFetch";
-import { getReadingItems } from "../services/itemsService";
-import { useEffect } from "react";
+import { deleteReadingItem, getReadingItems } from "../services/itemsService";
+import { useEffect, useState } from "react";
+import ReadingCard from "../components/ReadingCard";
+import ModalConfirm from "../components/ModalConfirm";
 
 const ReadingList = () => {
   const navigate = useNavigate();
 
-  const { data: items, loading, error, refetch } = useFetch(getReadingItems);
-  console.log(items);
+  const {
+    data: items,
+    setData: setItems,
+    loading,
+    error,
+    refetch,
+  } = useFetch(getReadingItems);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeItem, setActiveItem] = useState(null);
 
   useEffect(() => {
     refetch();
   }, [refetch]);
+
+  const handleOpenDeleteModal = (item) => {
+    setActiveItem(item);
+    setIsModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!activeItem) return;
+
+    try {
+      await deleteReadingItem(activeItem._id);
+
+      const updatedList = items.filter((item) => item._id !== activeItem._id);
+      setItems(updatedList);
+    } catch (err) {
+      alert("item can't be deleted");
+      console.error(err);
+    } finally {
+      setIsModalOpen(false);
+      setActiveItem(null);
+    }
+  };
 
   if (loading) {
     return (
@@ -49,13 +81,21 @@ const ReadingList = () => {
         ) : (
           <div>
             {items?.map((item) => (
-              <ul key={item._id} item={item}>
-                <li>{item.title}</li>
-              </ul>
+              <ReadingCard
+                key={item._id}
+                item={item}
+                onDelete={() => handleOpenDeleteModal(item)}
+              />
             ))}
           </div>
         )}
       </section>
+      <ModalConfirm
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        itemName={activeItem?.title}
+      />
     </main>
   );
 };
