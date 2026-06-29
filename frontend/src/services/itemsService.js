@@ -2,25 +2,25 @@ import api from "./api";
 
 export const createReadingItem = async (itemData) => {
   const { data } = await api.post("/items", itemData);
-  return data;
+  return data.item;
 };
 
 export const getReadingItems = async () => {
   const { data } = await api.get("/items");
-  return data;
+  return data.items;
 };
 
 export const getReadingItemById = async (itemId) => {
   const { data } = await api.get(`/items/${itemId}`);
-  return data;
+  return data.item || data;
 };
 
 export const updateReadingItem = async (itemId, updatedData) => {
   const { data } = await api.put(`items/${itemId}`, updatedData);
-  return data;
+  return data.newItem;
 };
 
 export const deleteReadingItem = async (itemId) => {
-  const { data } = await api.delete(`items/${itemId}`);
-  return data;
+  const response = await api.delete(`items/${itemId}`);
+  return response.status === 204;
 };

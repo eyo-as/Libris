@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 
 export const useFetch = (fetchFunction) => {
   const [state, setState] = useState({
-    data: null,
+    data: [],
     loading: true,
     error: null,
   });
@@ -12,7 +12,7 @@ export const useFetch = (fetchFunction) => {
       const result = await fetchFunction();
       setState({ data: result, loading: false, error: null });
     } catch (err) {
-      setState({ data: null, loading: false, error: err });
+      setState({ data: [], loading: false, error: err });
     }
   }, [fetchFunction]);
 
@@ -28,7 +28,7 @@ export const useFetch = (fetchFunction) => {
         }
       } catch (err) {
         if (isMounted) {
-          setState({ data: null, loading: false, error: err });
+          setState({ data: [], loading: false, error: err });
         }
       }
     };
