@@ -16,11 +16,11 @@ export const getReadingItemById = async (itemId) => {
 };
 
 export const updateReadingItem = async (itemId, updatedData) => {
-  const { data } = await api.put(`items/${itemId}`, updatedData);
+  const { data } = await api.put(`/items/${itemId}`, updatedData);
   return data.newItem;
 };
 
 export const deleteReadingItem = async (itemId) => {
-  const response = await api.delete(`items/${itemId}`);
+  const response = await api.delete(`/items/${itemId}`);
   return response.status === 204;
 };

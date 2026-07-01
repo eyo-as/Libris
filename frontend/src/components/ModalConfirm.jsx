@@ -10,7 +10,7 @@ export default function ModalConfirm({ isOpen, onClose, onConfirm, itemName }) {
         backgroundColor: "rgba(0,0,0,0.5)",
         display: "flex",
         alignItems: "center",
-        justifycontent: "center",
+        justifyContent: "center",
         zIndex: 50,
       }}
     >

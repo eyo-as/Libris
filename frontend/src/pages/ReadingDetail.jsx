@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getReadingItemById } from "../services/itemsService";
 import { useFetch } from "../hooks/useFetch";
@@ -12,11 +12,7 @@ const ReadingDetail = () => {
     () => getReadingItemById(itemId),
     [itemId],
   );
-  const { data: item, loading, error, refetch } = useFetch(fetchSingleItem);
-
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
+  const { data: item, loading, error } = useFetch(fetchSingleItem);
 
   if (loading)
     return (

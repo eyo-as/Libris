@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useFetch } from "../hooks/useFetch";
 import { deleteReadingItem, getReadingItems } from "../services/itemsService";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ReadingCard from "../components/ReadingCard";
 import ModalConfirm from "../components/ModalConfirm";
 
@@ -18,10 +18,6 @@ const ReadingList = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeItem, setActiveItem] = useState(null);
-
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
 
   const handleOpenDeleteModal = (item) => {
     setActiveItem(item);
