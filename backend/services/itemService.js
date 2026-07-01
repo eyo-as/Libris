@@ -1,5 +1,4 @@
 const ReadingItem = require("../models/ReadingItem");
-const User = require("../models/User");
 const AppError = require("../utils/appError");
 
 const createItem = async (itemData) => {
@@ -8,41 +7,40 @@ const createItem = async (itemData) => {
   }
 
   const newItem = await ReadingItem.create(itemData);
-
   return newItem;
 };
 
 const getItems = async (userId) => {
-  const items = await ReadingItem.find({ userId }).sort("-createdAt");
-
-  if (!items) {
-    throw new AppError("Items not found.", 401);
+  if (!userId) {
+    throw new AppError("User ID is required to fetch items.", 400);
   }
 
-  return items;
+  return ReadingItem.find({ userId }).sort("-createdAt");
 };
 
-const getItemById = async (itemId) => {
-  const item = await ReadingItem.findById(itemId);
+const getItemById = async (itemId, userId) => {
+  if (!itemId || !userId) {
+    throw new AppError("Item ID and user ID are required.", 400);
+  }
+
+  const item = await ReadingItem.findOne({ _id: itemId, userId });
 
   if (!item) {
-    throw new AppError("Item not found.", 401);
+    throw new AppError("Item not found or unauthorized.", 404);
   }
 
   return item;
 };
 
 const updateItem = async (itemId, userId, itemData) => {
-  const newItem = await ReadingItem.findByIdAndUpdate(
-    { _id: itemId, userId: userId },
-    itemData,
-    {
-      returnDocument: "after",
-      runValidators: true,
-    },
-  );
+  if (!itemId || !userId) {
+    throw new AppError("Item ID and user ID are required.", 400);
+  }
 
-  return newItem;
+  return ReadingItem.findOneAndUpdate({ _id: itemId, userId }, itemData, {
+    returnDocument: "after",
+    runValidators: true,
+  });
 };
 
 const deleteItem = async (itemId, userId) => {

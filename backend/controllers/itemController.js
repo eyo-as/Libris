@@ -33,8 +33,9 @@ const getItemsController = catchAsync(async (req, res, next) => {
 });
 
 const getItemByIdController = catchAsync(async (req, res, next) => {
+  const userId = req.user.id || req.user._id;
   const itemId = req.params.id;
-  const item = await getItemById(itemId);
+  const item = await getItemById(itemId, userId);
 
   res.status(200).json({
     status: "success",

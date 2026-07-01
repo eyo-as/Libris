@@ -27,7 +27,7 @@ const Register = () => {
     setIsSubmiting(true);
 
     const userData = {
-      name: usernameRef.current.value,
+      username: usernameRef.current.value,
       email: emailRef.current.value,
       password: passwordRef.current.value,
     };
